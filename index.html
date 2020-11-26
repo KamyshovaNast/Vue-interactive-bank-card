@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CardChecker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card" id="app" v-bind:style="'background: ' + bgcl">
+
+        <!-- Здесь будет выводиться ЛОГОТИП БАНКА -->
+        <div class="bank">
+            <img v-bind:src="bankImg">
+        </div>
+
+        <!-- Поле для ввода НОМЕРА КАРТЫ -->
+        <div class="number-container">
+            <input type="text" placeholder="Номер карты" v-model="cartNumber" v-bind:class="((isCorrect == 'true') ? 'input-ok' : 'input-err')">
+            <div class="status" v-bind:class="((isCorrect == 'true') ? 'status-ok' : 'status-err')"></div>
+        </div>
+
+        <!-- Поле для ввода ИМЕНИ ДЕРЖАТЕЛЯ -->
+        <div class="name-container">
+            <input type="text" placeholder="Имя держателя" v-model="cartName" v-bind:class="((isNameCorrect == 'true') ? 'input-ok' : 'input-err')">
+            <div class="status" v-bind:class="((isNameCorrect == 'true') ? 'status-ok' : 'status-err')"></div>
+        </div>
+
+        <!-- Логотип ПЛАТЕЖНОЙ СИСТЕМЫ -->
+        <div class="pay-system">
+            <img v-bind:src="paySys">
+        </div>
+
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    "use stricts";
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            cartNumber: '',
+            cartName: '',
+            bgcl: '#eff5f8'
+        },
+        computed: {
+            paySys() {
+                let fNum = this.cartNumber[0];
+                switch(fNum) {
+                    case '2': return 'img/systems/mir.png';
+                    case '3': return 'img/systems/american-exp.png';
+                    case '4': return 'img/systems/visa.png';
+                    case '5': return 'img/systems/mastercard.png';
+                    case '6': return 'img/systems/maestro.png';
+                }
+            },
+            bankImg() {
+                let fNum = this.cartNumber.slice(0, 6);
+                if ((fNum == '521178') || (fNum == '548673') || (fNum == '548601') || (fNum == '415428') || (fNum == '676371') || (fNum == '477964') || (fNum == '479004')) {
+                    this.bgcl = '#ffb4aa';
+                    return 'img/banks/alpha.png';
+                } else
+                if ((fNum == '427229') || (fNum == '527883') || (fNum == '447520')) {
+                    this.bgcl = '#CCE1EB';
+                    return 'img/banks/vtb.png';
+                } else
+                if ((fNum == '548999') || (fNum == '526483')) {
+                    this.bgcl = '#89A9EB';
+                    return 'img/banks/gazprombank.png';
+                } else
+                if ((fNum == '533736') || (fNum == '540616')) {
+                    this.bgcl = '#EBB5B3';
+                    return 'img/banks/mts-bank.png';
+                } else
+                if ((fNum == '440503') || (fNum == '554761')) {
+                    this.bgcl = '#EBC0D1';
+                    return 'img/banks/rosbank.png';
+                } else
+                if ((fNum == '513691') || (fNum == '510047')) {
+                    this.bgcl = '#ECDED9';
+                    return 'img/banks/russian_standart.png';
+                } else
+                if ((fNum == '462730') || (fNum == '462729')) {
+                    this.bgcl = '#EAEDD8';
+                    return 'img/banks/raiffaizen.png';
+                } else
+                if ((fNum == '521324') || (fNum == '437773')) {
+                    this.bgcl = '#EEECB7';
+                    return 'img/banks/tinkoff.png';
+                } else
+                if ((fNum == '434146') || (fNum == '405870') || (fNum == '544573') || (fNum == '532301')) {
+                    this.bgcl = '#A9F1F5';
+                    return 'img/banks/otkrytie.png';
+                } else
+                if ((fNum == '427683') || (fNum == '427901') || (fNum == '427644') || (fNum == '427601') || (fNum == '427901') || (fNum == '427631') || (fNum == '427638') || (fNum == '546938')) {
+                    this.bgcl = '#ADF5B3';
+                    return 'img/banks/sberbank.png';
+                } else this.bgcl = '#eff5f8';
+            },
+            isNameCorrect() {
+                let alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+                let count = 0;
+                for (let i = 0; i < this.cartName.length; i++) {
+                    for (let j = 0; j < alpha.length; j++) {
+                        if (alpha[j] == this.cartName[i]) {
+                            count++;
+                        }
+                    }
+                };
+                if ((count == this.cartName.length) && (count != 0)){
+                    return 'true'
+                } else return 'false';
+            },
+            isCorrect() {
+                if (this.cartNumber.length == 16) {
+                    let sum1 = 0;
+                    let sum2 = 0;
+                    let res1 = 0;
+                    if (this.cartNumber.length == 16) {
+                        for (let i = 16; i < this.cartNumber.length; i--) {
+                            if (i % 2 == 0) {
+                                res1 = this.cartNumber[i] * 2;
+                                if (res1 > 9) {
+                                    res1 = res1 - 9
+                                };
+                                sum1 += res1
+                            }
+                            else {
+                                sum2 += this.cartNumber[i];
+                            }
+                        }
+                        if ((sum1 + sum2) % 10 == 0) {
+                            return 'true'
+                        } else return 'false'
+                } else return "false";
+                } else return 'false';
+            }
+        }
+    })
+</script>
+</body>
+</html>
